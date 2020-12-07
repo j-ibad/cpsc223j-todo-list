@@ -7,33 +7,23 @@ import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ListView
+import androidx.fragment.app.FragmentManager
 import com.group7.android.todolist.ui.main.SectionsPagerAdapter
 
 class MainActivity : AppCompatActivity() {
+    val fm : FragmentManager = supportFragmentManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
+        val sectionsPagerAdapter = SectionsPagerAdapter(this, fm)
         val viewPager: ViewPager = findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
         val fab: FloatingActionButton = findViewById(R.id.fab)
-
-        // adding task to display
-//        val tasks : ArrayList<String> = ArrayList<String>()
-//        val taskAdapter : ArrayAdapter<String> = ArrayAdapter<String>(this,
-//            android.R.layout.simple_list_item_1, tasks)
-//        val taskDisplay : ListView = getView() findViewById(R.id.task_display)
-//
-//        taskDisplay.adapter = taskAdapter
-//        tasks.add("task 1")
-//        tasks.add("task 2")
 
         // pop up windows for creating tasks
         var dialogBuilder : AlertDialog.Builder
@@ -55,7 +45,9 @@ class MainActivity : AppCompatActivity() {
             dialog.show()
 
             popupSave.setOnClickListener { view ->
-
+                val td : ToDo = sectionsPagerAdapter.getItem(0) as ToDo
+                td.addTasks(newTaskTitle.text.toString())
+                dialog.dismiss()
             }
             popupCancel.setOnClickListener { view ->
                 dialog.dismiss()
