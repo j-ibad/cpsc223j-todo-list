@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">To Do List 223J</string>
+<<<<<<< HEAD
+    <string name="tab_text_1">To Do</string>
+    <string name="tab_text_2">Finished</string>
+    <string name="popup_title">New Task</string>
+    <string name="save_button">Save</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="new_task_textbox_hint">Enter the Task Title</string>
+=======
+    <string name="tab_text_1">To-Do</string>
+    <string name="tab_text_2">Finished</string>
+>>>>>>> main
+</resources>
