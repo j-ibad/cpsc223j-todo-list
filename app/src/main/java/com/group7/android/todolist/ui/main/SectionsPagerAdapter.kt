@@ -2,9 +2,12 @@ package com.group7.android.todolist.ui.main
 
 import android.content.Context
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.group7.android.todolist.Finish
 import com.group7.android.todolist.R
+import com.group7.android.todolist.ToDo
 
 private val TAB_TITLES = arrayOf(
     R.string.tab_text_1,
@@ -15,13 +18,18 @@ private val TAB_TITLES = arrayOf(
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
-class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
+class SectionsPagerAdapter(private val context: Context, val fm: FragmentManager) :
     FragmentPagerAdapter(fm) {
+    var td : ToDo = ToDo()
+    var f : Finish = Finish()
 
-    override fun getItem(position: Int): Fragment {
-        // getItem is called to instantiate the fragment for the given page.
-        // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment.newInstance(position + 1)
+    override fun getItem(position: Int): Fragment? {
+        // return current tab
+        when (position) {
+            0 -> return td
+            1 -> return f
+            else -> return null
+        }
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
