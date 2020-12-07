@@ -7,10 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
 class PageViewModel : ViewModel() {
-
     private val _index = MutableLiveData<Int>()
     val text: LiveData<String> = Transformations.map(_index) {
-        "Hello world from section: $it"
+        if(it==1) "To-Do" else "Finished"
     }
 
     fun setIndex(index: Int) {
