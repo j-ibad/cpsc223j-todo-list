@@ -15,6 +15,7 @@ class ToDo : Fragment() {
     val tasks : ArrayList<String> = ArrayList<String>()
     lateinit var taskAdapter : ArrayAdapter<String>
     lateinit var taskDisplay : ListView
+    var changed_flag: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,17 +31,16 @@ class ToDo : Fragment() {
         return root
     }
 
-    fun addTasks(taskTitle : String) {
-        tasks.add(taskTitle)
-        val m_file = File(this.context?.getExternalFilesDir(null), "Test")
+    override fun onDestroy() {
+        super.onDestroy()
+        if(changed_flag){
+            rewriteTasks()
+        }
+    }
 
-        if(!m_file.exists()) {
-            m_file.createNewFile()
-        }
-        m_file.printWriter().use { out ->
-            out.println(taskTitle)
-            /** Add more info and format if necessary */
-        }
+    fun addTasks(taskTitle : String) {
+        changed_flag = true
+        tasks.add(taskTitle)
     }
 
     fun readTasks() {
@@ -52,6 +52,21 @@ class ToDo : Fragment() {
             val lines: List<String> = m_file.readLines()
             lines.forEach {line->
                 tasks.add(line)
+            }
+        }
+    }
+
+    fun rewriteTasks(){
+        val m_file = File(this.context?.getExternalFilesDir(null), "Test")
+
+        if(!m_file.exists()) {
+            m_file.createNewFile()
+        }
+
+        m_file.printWriter().use { out ->
+            tasks.forEach{ line->
+                out.println(line)
+                /** Add more info and format if necessary */
             }
         }
     }
