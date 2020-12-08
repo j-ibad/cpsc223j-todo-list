@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.group7.android.todolist.Broker
 import com.group7.android.todolist.Finish
 import com.group7.android.todolist.R
 import com.group7.android.todolist.ToDo
@@ -22,6 +23,7 @@ class SectionsPagerAdapter(private val context: Context, val fm: FragmentManager
     FragmentPagerAdapter(fm) {
     var td : ToDo = ToDo()
     var f : Finish = Finish()
+
 
     override fun getItem(position: Int): Fragment? {
         // return current tab

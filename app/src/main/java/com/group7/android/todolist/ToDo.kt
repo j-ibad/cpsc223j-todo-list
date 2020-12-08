@@ -20,7 +20,7 @@ class ToDo : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        Broker.todo = this
         readTasks()
         val root = inflater.inflate(R.layout.tab_1_to_do, container, false)
         taskDisplay = root.findViewById(R.id.task_display)
