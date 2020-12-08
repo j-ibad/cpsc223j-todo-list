@@ -20,6 +20,7 @@ class Finish : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Broker.fin = this
         readTasks()
         val root = inflater.inflate(R.layout.tab_2_finish, container, false)
         taskDisplay = root.findViewById(R.id.task_display_fin)
@@ -38,7 +39,7 @@ class Finish : Fragment() {
 
     fun readTasks() {
         System.out.println("[Finished] Reading")
-        val m_file = File(this.context?.getExternalFilesDir(null), "finished")
+        val m_file = File(this.context?.getExternalFilesDir("store"), "finished")
 
         if(!m_file.exists()) {
             m_file.createNewFile()
@@ -52,7 +53,7 @@ class Finish : Fragment() {
 
     fun rewriteTasks(){
         System.out.println("[Finished] Writing")
-        val m_file = File(this.context?.getExternalFilesDir(null), "finished")
+        val m_file = File(this.context?.getExternalFilesDir("store"), "finished")
 
         if(!m_file.exists()) {
             m_file.createNewFile()

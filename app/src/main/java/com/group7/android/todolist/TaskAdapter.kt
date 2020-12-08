@@ -2,11 +2,13 @@ package com.group7.android.todolist
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 
 class TaskAdapter(private val context: Context, private val tasks: ArrayList<TaskItem>) :
         BaseAdapter(){
@@ -25,6 +27,14 @@ class TaskAdapter(private val context: Context, private val tasks: ArrayList<Tas
         val task_item = getItem(pos) as TaskItem
         titleView.text = task_item.title
         /* Fill in views with TaskItem member fields */
+
+        rowView.setOnClickListener{view ->
+            val intent = Intent(this.context, TaskDetails::class.java).apply {
+                putExtra("TASK_TITLE", task_item.title)
+                putExtra("INDEX", pos)
+            }
+            startActivity(this.context, intent, null)
+        }
 
         return rowView
     }
