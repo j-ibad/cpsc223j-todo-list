@@ -44,7 +44,7 @@ class ToDo : Fragment() {
     }
 
     fun readTasks() {
-        val m_file = File(this.context?.getExternalFilesDir(null), "Test")
+        val m_file = File(this.context?.getExternalFilesDir(null), "store")
 
         if(!m_file.exists()) {
             m_file.createNewFile()
@@ -57,7 +57,7 @@ class ToDo : Fragment() {
     }
 
     fun rewriteTasks(){
-        val m_file = File(this.context?.getExternalFilesDir(null), "Test")
+        val m_file = File(this.context?.getExternalFilesDir(null), "store")
 
         if(!m_file.exists()) {
             m_file.createNewFile()
