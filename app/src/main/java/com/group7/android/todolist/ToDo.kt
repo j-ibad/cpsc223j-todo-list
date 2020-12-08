@@ -12,8 +12,7 @@ import java.io.File
 
 class ToDo : Fragment() {
     // adding task to display
-    val tasks : ArrayList<String> = ArrayList<String>()
-    lateinit var taskAdapter : ArrayAdapter<String>
+    val tasks : ArrayList<TaskItem> = ArrayList<TaskItem>()
     lateinit var taskDisplay : ListView
     var changed_flag: Boolean = false
 
@@ -25,8 +24,7 @@ class ToDo : Fragment() {
         readTasks()
         val root = inflater.inflate(R.layout.tab_1_to_do, container, false)
         taskDisplay = root.findViewById(R.id.task_display)
-        taskAdapter = ArrayAdapter<String>(root.context,
-            android.R.layout.simple_list_item_1, tasks)
+        val taskAdapter = TaskAdapter(this.requireContext(), tasks)
         taskDisplay.adapter = taskAdapter
         return root
     }
@@ -40,32 +38,34 @@ class ToDo : Fragment() {
 
     fun addTasks(taskTitle : String) {
         changed_flag = true
-        tasks.add(taskTitle)
+        tasks.add( TaskItem(taskTitle) )
     }
 
     fun readTasks() {
-        val m_file = File(this.context?.getExternalFilesDir(null), "store")
+        System.out.println("[TODO] Reading")
+        val m_file = File(this.context?.getExternalFilesDir(null), "todo")
 
         if(!m_file.exists()) {
             m_file.createNewFile()
         }else {
             val lines: List<String> = m_file.readLines()
             lines.forEach {line->
-                tasks.add(line)
+                tasks.add( TaskItem(line) )
             }
         }
     }
 
     fun rewriteTasks(){
-        val m_file = File(this.context?.getExternalFilesDir(null), "store")
+        System.out.println("[TODO] Writing")
+        val m_file = File(this.context?.getExternalFilesDir(null), "todo")
 
         if(!m_file.exists()) {
             m_file.createNewFile()
         }
 
         m_file.printWriter().use { out ->
-            tasks.forEach{ line->
-                out.println(line)
+            tasks.forEach{ item->
+                out.println(item.title)
                 /** Add more info and format if necessary */
             }
         }
