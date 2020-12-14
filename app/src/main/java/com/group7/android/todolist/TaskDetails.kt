@@ -2,9 +2,12 @@ package com.group7.android.todolist
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.widget.BaseAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
+import kotlinx.android.synthetic.main.activity_task_details.*
 
 class TaskDetails : AppCompatActivity() {
 
@@ -20,6 +23,15 @@ class TaskDetails : AppCompatActivity() {
 
         val removeButton = findViewById<Button>(R.id.task_remove_button)
         val finishButton = findViewById<Button>(R.id.task_finish_button)
+        val saveButton = findViewById<Button>(R.id.task_save_button)
+        val editTask = findViewById<EditText>(R.id.task_edit_text)
+
+        if (Broker.focused == 0) {
+            editTask.setText(Broker.todo.tasks.get(index).title)
+        } else {
+            editTask.setText(Broker.fin.tasks.get(index).title)
+        }
+
         System.out.println(Broker.focused)
         if(Broker.focused == 1){ //Tasks clicked on Finished tab
             finishButton.text = "To-Do"
@@ -41,6 +53,23 @@ class TaskDetails : AppCompatActivity() {
             }else{ //Finished Tab: From Finished to To-Do
                 val view = Broker.fin.tasks.removeAt(index)
                 Broker.todo.tasks.add(view)
+            }
+
+            val adapter1 = (Broker.todo.taskDisplay.adapter) as BaseAdapter
+            val adapter2 = (Broker.fin.taskDisplay.adapter) as BaseAdapter
+            adapter1.notifyDataSetChanged()
+            adapter2.notifyDataSetChanged()
+
+            Broker.todo.changed_flag = true
+            Broker.fin.changed_flag = true
+            finish()
+        }
+
+        saveButton.setOnClickListener{view->
+            if(Broker.focused == 0) { //To-do Tab:
+                Broker.todo.tasks.set(index, TaskItem(editTask.text.toString()))
+            }else{ //Finished Tab:
+                Broker.fin.tasks.set(index, TaskItem(editTask.text.toString()))
             }
 
             val adapter1 = (Broker.todo.taskDisplay.adapter) as BaseAdapter
