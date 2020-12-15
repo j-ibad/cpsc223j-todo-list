@@ -85,9 +85,12 @@ class ToDo : Fragment() {
             var tmp_scanner = Scanner(m_file)
             while(tmp_scanner.hasNext()){
                 var tmp_str = tmp_scanner.nextLine()
-                var date = tmp_scanner.nextLong()
+                var tmp_date : Long = 0;
+                if(tmp_scanner.hasNextLong()) {
+                    tmp_date = tmp_scanner.nextLong()
+                }
                 tmp_scanner.nextLine()
-                taskAdapter.add( TaskItem(tmp_str, Date(date)))
+                taskAdapter.add( TaskItem(tmp_str, Date(tmp_date)))
             }
         }
     }
