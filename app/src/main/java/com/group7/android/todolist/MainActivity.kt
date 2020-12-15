@@ -4,6 +4,7 @@ import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.View
@@ -15,6 +16,8 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.group7.android.todolist.ui.main.SectionsPagerAdapter
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -55,9 +58,20 @@ class MainActivity : AppCompatActivity() {
             dialog.show()
 
             popupSave.setOnClickListener { view ->
-                val td : ToDo = sectionsPagerAdapter.getItem(0) as ToDo
-                td.addTasks(newTaskTitle.text.toString())
-                dialog.dismiss()
+                var cal = Calendar.getInstance()
+                DatePickerDialog(this,
+                    DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                        cal.set(Calendar.YEAR, year)
+                        cal.set(Calendar.MONTH, monthOfYear)
+                        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                        val td : ToDo = sectionsPagerAdapter.getItem(0) as ToDo
+                        td.addTasks( TaskItem(newTaskTitle.text.toString(), cal.time) )
+                        dialog.dismiss()
+                    },
+                    cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH)).show()
             }
             popupCancel.setOnClickListener { view ->
                 dialog.dismiss()

@@ -12,43 +12,47 @@ import androidx.fragment.app.Fragment
 import android.view.GestureDetector;
 import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.RecyclerView
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class TaskAdapter(
     context: Context,
     var textViewResourceId: Int
 ) :
-    ArrayAdapter<String>(context, textViewResourceId) {
+    ArrayAdapter<TaskItem>(context, textViewResourceId) {
     private val inflater: LayoutInflater = context.
         getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    var tasks : ArrayList<String> = ArrayList<String>()
+    var tasks : ArrayList<TaskItem> = ArrayList<TaskItem>()
 
     override fun getCount(): Int{ return tasks.size }
-    override fun getItem(pos: Int): String? { return tasks[pos] }
+    override fun getItem(pos: Int): TaskItem? { return tasks[pos] }
     override fun getItemId(pos: Int): Long{ return pos.toLong() }
-    override fun add(task_title: String?) {
-        super.add(task_title)
-        if (task_title != null) {
-            tasks.add(task_title)
+    override fun add(task: TaskItem?) {
+        super.add(task)
+        if (task != null) {
+            tasks.add(task)
         }
     }
-    override fun insert(task_title: String?, position: Int) {
-        super.insert(task_title, position)
-        if (task_title != null) {
-            tasks.add(position, task_title)
+    override fun insert(task: TaskItem?, position: Int) {
+        super.insert(task, position)
+        if (task != null) {
+            tasks.add(position, task)
         }
     }
-    override fun remove(task_title: String?) {
-        super.remove(task_title)
-        tasks.remove(task_title)
+    override fun remove(task: TaskItem?) {
+        super.remove(task)
+        tasks.remove(task)
     }
     override fun clear() { super.clear(); tasks.clear() }
 
     override fun getView(pos: Int, convertView: View?, parent: ViewGroup): View {
 //        val rowView = inflater.inflate(R.layout.task_item, parent, false)
 //        val titleView = rowView.findViewById(R.id.task_item_title) as TextView
+//        val dueDateView = rowView.findViewById(R.id.task_item_due_date) as TextView
 //        /* If more info needed, add views here */
-        val task_item = getItem(pos) as String
+        val task_item = getItem(pos) as TaskItem
 //        titleView.text = task_item.title
         /* Fill in views with TaskItem member fields */
 //
@@ -67,18 +71,23 @@ class TaskAdapter(
             assert(view != null)
             holder = ViewHolder()
             holder.title = view.findViewById(R.id.title) as TextView
+            holder.dueDate = view.findViewById(R.id.dueDate) as TextView
             holder.draggable = view.findViewById(R.id.draggable) as TextView
             view.setTag(holder)
         } else {
             holder = view.getTag() as ViewHolder?
         }
-        val string: String = tasks.get(pos)
+        val tmp_task: TaskItem = tasks.get(pos)
 
-        holder?.title?.setText(string)
+        val myFormat = "MM/dd/yyyy"
+        val sdf = SimpleDateFormat(myFormat, Locale.US)
+        holder?.title?.setText(tmp_task.title)// + " " + sdf.format(tmp_task.dueDate.time))
+        holder?.dueDate?.setText(sdf.format(tmp_task.dueDate.time))
 
         holder?.title?.setOnClickListener{ view ->
             val intent = Intent(this.context, TaskDetails::class.java).apply {
-                putExtra("TASK_TITLE", task_item)
+                putExtra("TASK_TITLE", task_item.title)
+                putExtra("TASK_DUE_DATE", task_item.dueDate.time)
                 putExtra("INDEX", pos)
             }
             startActivity(this.context, intent, null)
@@ -88,9 +97,9 @@ class TaskAdapter(
             override fun onTouch(view: View?, motionEvent: MotionEvent): Boolean {
                 if (motionEvent.getAction() === MotionEvent.ACTION_DOWN) {
                     if (Broker.focused == 0) {
-                        Broker.todo.startDrag(string)
+                        Broker.todo.startDrag(tmp_task)
                     } else {
-                        Broker.fin.startDrag(string)
+                        Broker.fin.startDrag(tmp_task)
                     }
                     return true
                 }
@@ -98,14 +107,14 @@ class TaskAdapter(
             }
         })
 
-        val drag_string : String
+        val drag_string : TaskItem
         if (Broker.focused == 0) {
             drag_string = Broker.todo.drag_string
         } else {
             drag_string = Broker.fin.drag_string
         }
 
-        if (drag_string == string) {
+        if (drag_string.equals(tmp_task)) {
             view?.setBackgroundColor(Color.parseColor("#9933b5e5"))
         } else {
             view?.setBackgroundColor(Color.TRANSPARENT)
@@ -117,5 +126,6 @@ class TaskAdapter(
 
 class ViewHolder {
     var title: TextView? = null
+    var dueDate: TextView? = null
     var draggable: TextView? = null
 }
