@@ -46,6 +46,7 @@ class Finish : Fragment() {
                         val position: Int = (taskDisplay.pointToPosition(event.getX().roundToInt(), event.getY().roundToInt()))
                         if (position < 0) return false
                         if (position != task_position) {
+                            changed_flag = true;
                             task_position = position
                             taskAdapter.remove(drag_string)
                             taskAdapter.insert(drag_string, task_position)
