@@ -2,8 +2,10 @@ package com.group7.android.todolist
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.app.Activity
 import android.app.AlertDialog
 import android.os.Bundle
+import android.view.GestureDetector
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -16,12 +18,10 @@ import com.group7.android.todolist.ui.main.SectionsPagerAdapter
 
 
 class MainActivity : AppCompatActivity() {
-    val fm : FragmentManager = supportFragmentManager
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val sectionsPagerAdapter = SectionsPagerAdapter(this, fm)
+        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
         val viewPager: ViewPager = findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
