@@ -16,4 +16,12 @@
         android:textColor="@color/black"
         android:textSize="16dp"/>
 
+    <TextView
+        android:id="@+id/task_item_due_date"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="16dp"/>
+
 </LinearLayout>

@@ -17,7 +17,8 @@ class TaskDetails : AppCompatActivity() {
         setContentView(R.layout.activity_task_details)
 
         val titleView = findViewById<TextView>(R.id.task_details_title)
-        titleView.text = intent.getStringExtra("TASK_TITLE");
+        titleView.text = intent.getStringExtra("TASK_TITLE")
+        val dueDate = intent.getLongExtra("TASK_DUE_DATE", 0)
 
         val index = intent.getIntExtra("INDEX", 0);
 
@@ -27,9 +28,9 @@ class TaskDetails : AppCompatActivity() {
         val editTask = findViewById<EditText>(R.id.task_edit_text)
 
         if (Broker.focused == 0) {
-            editTask.setText(Broker.todo.taskAdapter.tasks.get(index))
+            editTask.setText(Broker.todo.taskAdapter.tasks.get(index).title)
         } else {
-            editTask.setText(Broker.fin.taskAdapter.tasks.get(index))
+            editTask.setText(Broker.fin.taskAdapter.tasks.get(index).title)
         }
 
         System.out.println(Broker.focused)
@@ -67,9 +68,9 @@ class TaskDetails : AppCompatActivity() {
 
         saveButton.setOnClickListener{view->
             if(Broker.focused == 0) { //To-do Tab:
-                Broker.todo.taskAdapter.tasks.set(index, editTask.text.toString())
+                Broker.todo.taskAdapter.tasks.get(index).title = editTask.text.toString()
             }else{ //Finished Tab:
-                Broker.fin.taskAdapter.tasks.set(index, editTask.text.toString())
+                Broker.fin.taskAdapter.tasks.get(index).title = editTask.text.toString()
             }
 
             val adapter1 = (Broker.todo.taskDisplay.adapter) as BaseAdapter

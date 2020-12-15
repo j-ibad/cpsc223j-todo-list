@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
 import java.io.File
+import java.util.*
 import kotlin.math.roundToInt
 
 class ToDo : Fragment() {
@@ -16,7 +17,7 @@ class ToDo : Fragment() {
     lateinit var taskAdapter: TaskAdapter
     var changed_flag: Boolean = false
     var is_sortable : Boolean = false
-    var drag_string : String = ""
+    var drag_string : TaskItem = TaskItem("", Date(0))
     var task_position : Int = -1
 
     override fun onCreateView(
@@ -69,9 +70,9 @@ class ToDo : Fragment() {
         }
     }
 
-    fun addTasks(taskTitle : String) {
+    fun addTasks(task : TaskItem) {
         changed_flag = true
-        taskAdapter.add(taskTitle)
+        taskAdapter.add( task )
     }
 
     fun readTasks() {
@@ -81,9 +82,15 @@ class ToDo : Fragment() {
         if(!m_file.exists()) {
             m_file.createNewFile()
         }else {
-            val lines: List<String> = m_file.readLines()
-            lines.forEach {line->
-                taskAdapter.add(line)
+            var tmp_scanner = Scanner(m_file)
+            while(tmp_scanner.hasNext()){
+                var tmp_str = tmp_scanner.nextLine()
+                var tmp_date : Long = 0;
+                if(tmp_scanner.hasNextLong()) {
+                    tmp_date = tmp_scanner.nextLong()
+                }
+                tmp_scanner.nextLine()
+                taskAdapter.add( TaskItem(tmp_str, Date(tmp_date)))
             }
         }
     }
@@ -98,23 +105,24 @@ class ToDo : Fragment() {
 
         m_file.printWriter().use { out ->
             taskAdapter.tasks.forEach{ item->
-                out.println(item)
+                out.println(item.title)
                 /** Add more info and format if necessary */
+                out.println(item.dueDate.time)
             }
         }
     }
 
-    fun startDrag(string: String) {
+    fun startDrag(task: TaskItem) {
         task_position = -1
         is_sortable = true
-        drag_string = string
+        drag_string = task
         taskAdapter.notifyDataSetChanged()
     }
 
     fun stopDrag() {
         task_position = -1
         is_sortable = false
-        drag_string = ""
+        drag_string = TaskItem("", Date(0))
         taskAdapter.notifyDataSetChanged()
     }
 }
